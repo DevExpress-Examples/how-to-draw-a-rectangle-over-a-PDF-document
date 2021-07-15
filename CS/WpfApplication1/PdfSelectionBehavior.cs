@@ -15,27 +15,25 @@ using System.Windows.Threading;
 
 namespace WpfApplication1 {
     public class PdfSelectionBehavior : Behavior<PdfViewerControl> {
-        AdornerLayer ControlAdornerLayer;
-        SelectionAdorner SelectionAdorner;
+        AdornerLayer controlAdornerLayer;
+        SelectionAdorner selectionAdorner;
         Point mouseStartPoint = new Point();
-        DocumentViewerPanel DocumentPanel;
+        DocumentViewerPanel documentPanel;
 
         public event PdfSelectionChangedEventHandler PdfSelectionChanged;
         protected void NotifyPdfSelectionChanged() {
             if (PdfSelectionChanged != null) {
-                var startPoint = SelectionAdorner.Location;
+                var startPoint = selectionAdorner.Location;
                 var endPoint = startPoint;
-                endPoint.Offset(SelectionAdorner.OffSet.X, SelectionAdorner.OffSet.Y);
-                PdfDocumentPosition startPosition = AssociatedObject.ConvertPixelToDocumentPosition(DocumentPanel.TranslatePoint(startPoint, AssociatedObject));
-                PdfDocumentPosition endPosition = AssociatedObject.ConvertPixelToDocumentPosition(DocumentPanel.TranslatePoint(endPoint, AssociatedObject));
+                endPoint.Offset(selectionAdorner.OffSet.X, selectionAdorner.OffSet.Y);
+                PdfDocumentPosition startPosition = AssociatedObject.ConvertPixelToDocumentPosition(documentPanel.TranslatePoint(startPoint, AssociatedObject));
+                PdfDocumentPosition endPosition = AssociatedObject.ConvertPixelToDocumentPosition(documentPanel.TranslatePoint(endPoint, AssociatedObject));
                 PdfSelectionChanged(this, new PdfSelectionChangedEventArgs(startPosition, endPosition));
             }
         }
 
-
         protected override void OnAttached() {
             base.OnAttached();
-
             if (AssociatedObject.IsLoaded)
                 CreateAdorner();
             else
@@ -47,62 +45,58 @@ namespace WpfApplication1 {
         }
 
         protected virtual void CreateAdorner() {
-            
             AssociatedObject.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
             AssociatedObject.PreviewMouseLeftButtonUp += OnPreviewMouseLeftButtonUp;
             AssociatedObject.PreviewMouseMove += OnPreviewMouseMove;
 
+            documentPanel = LayoutTreeHelper.GetVisualChildren(AssociatedObject).OfType<DocumentViewerPanel>().FirstOrDefault();
+            if (documentPanel == null) return;
 
-            DocumentPanel = LayoutTreeHelper.GetVisualChildren(AssociatedObject).OfType<DocumentViewerPanel>().FirstOrDefault();
-            if (DocumentPanel == null) return;
+            controlAdornerLayer = AdornerLayer.GetAdornerLayer(documentPanel);
+            selectionAdorner = new SelectionAdorner(documentPanel);
 
-            ControlAdornerLayer = AdornerLayer.GetAdornerLayer(DocumentPanel);
-            SelectionAdorner = new SelectionAdorner(DocumentPanel);
-
-            ControlAdornerLayer.Add(SelectionAdorner);
-            SelectionAdorner.PreviewMouseLeftButtonDown += OnAdornerPreviewMouseLeftButtonDown;
-            SelectionAdorner.PreviewMouseMove += OnAdornerPreviewMouseMove;
-            SelectionAdorner.PreviewMouseLeftButtonUp += OnAdornerPreviewMouseLeftButtonUp;
+            controlAdornerLayer.Add(selectionAdorner);
+            selectionAdorner.PreviewMouseLeftButtonDown += OnAdornerPreviewMouseLeftButtonDown;
+            selectionAdorner.PreviewMouseMove += OnAdornerPreviewMouseMove;
+            selectionAdorner.PreviewMouseLeftButtonUp += OnAdornerPreviewMouseLeftButtonUp;
 
         }
-
-
         private void OnScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e) {
-            var startPoint = SelectionAdorner.Location;
+            var startPoint = selectionAdorner.Location;
             startPoint.Offset(-e.HorizontalChange, -e.VerticalChange);
-            SelectionAdorner.Location = startPoint;
+            selectionAdorner.Location = startPoint;
             UpdateAdorner();
         }
 
         //Create Adorner 
         protected virtual void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             if (!(e.OriginalSource is DevExpress.Xpf.PdfViewer.DXScrollViewer)) return;
-            if (DocumentPanel == null) return;
+            if (documentPanel == null) return;
 
-            SelectionAdorner.Location = e.GetPosition(DocumentPanel);
-            if (!DocumentPanel.IsMouseCaptured) {
-                DocumentPanel.CaptureMouse();
+            selectionAdorner.Location = e.GetPosition(documentPanel);
+            if (!documentPanel.IsMouseCaptured) {
+                documentPanel.CaptureMouse();
                 e.Handled = true;
             }
         }
 
         void OnPreviewMouseMove(object sender, MouseEventArgs e) {
-            if (DocumentPanel == null) return;
+            if (documentPanel == null) return;
 
-            if (DocumentPanel.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed) {
-                var mouseOffset = e.GetPosition(SelectionAdorner);
-                mouseOffset.Offset(-SelectionAdorner.Location.X, -SelectionAdorner.Location.Y);
-                SelectionAdorner.OffSet = mouseOffset;
+            if (documentPanel.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed) {
+                var mouseOffset = e.GetPosition(selectionAdorner);
+                mouseOffset.Offset(-selectionAdorner.Location.X, -selectionAdorner.Location.Y);
+                selectionAdorner.OffSet = mouseOffset;
                 UpdateAdorner();
                 e.Handled = true;
             }
         }
 
         protected virtual void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            if (DocumentPanel == null) return;
+            if (documentPanel == null) return;
 
-            if (DocumentPanel.IsMouseCaptured) {
-                DocumentPanel.ReleaseMouseCapture();
+            if (documentPanel.IsMouseCaptured) {
+                documentPanel.ReleaseMouseCapture();
                 UpdateAdorner();
                 NotifyPdfSelectionChanged();
                 e.Handled = true;
@@ -111,42 +105,42 @@ namespace WpfApplication1 {
 
         // Move Adorner
         void OnAdornerPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            mouseStartPoint = e.GetPosition(SelectionAdorner);
-            if (!SelectionAdorner.IsMouseCaptured) {
-                SelectionAdorner.CaptureMouse();
+            mouseStartPoint = e.GetPosition(selectionAdorner);
+            if (!selectionAdorner.IsMouseCaptured) {
+                selectionAdorner.CaptureMouse();
             }
             e.Handled = true;
         }
 
         void OnAdornerPreviewMouseMove(object sender, MouseEventArgs e) {
-            if (SelectionAdorner.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed) {
-                var mouseOffset = e.GetPosition(SelectionAdorner);
+            if (selectionAdorner.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed) {
+                var mouseOffset = e.GetPosition(selectionAdorner);
                 mouseOffset.Offset(-mouseStartPoint.X, -mouseStartPoint.Y);
-                mouseStartPoint = e.GetPosition(SelectionAdorner);
-                var adornerPosition = SelectionAdorner.Location;
+                mouseStartPoint = e.GetPosition(selectionAdorner);
+                var adornerPosition = selectionAdorner.Location;
                 adornerPosition.Offset(mouseOffset.X, mouseOffset.Y);
-                SelectionAdorner.Location = adornerPosition;
+                selectionAdorner.Location = adornerPosition;
                 UpdateAdorner();
                 e.Handled = true;
             }
         }
 
         void OnAdornerPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            if (SelectionAdorner.IsMouseCaptured) {
-                SelectionAdorner.ReleaseMouseCapture();
+            if (selectionAdorner.IsMouseCaptured) {
+                selectionAdorner.ReleaseMouseCapture();
                 NotifyPdfSelectionChanged();
                 UpdateAdorner();
                 e.Handled = true;
             }
         }
         protected virtual void DestroyAdorner() {
-            if (SelectionAdorner != null)
-                ControlAdornerLayer.Remove(SelectionAdorner);
+            if (selectionAdorner != null)
+                controlAdornerLayer.Remove(selectionAdorner);
         }
 
         protected virtual void UpdateAdorner() {
-            if (SelectionAdorner != null)
-                SelectionAdorner.InvalidateVisual();
+            if (selectionAdorner != null)
+                selectionAdorner.InvalidateVisual();
         }
 
         protected override void OnDetaching() {
@@ -155,45 +149,5 @@ namespace WpfApplication1 {
             base.OnDetaching();
         }
     }
-
-    public class SelectionAdorner : Adorner {
-        protected DocumentViewerPanel PdfViewer { get; private set; }
-        Point location = new Point();
-        Point offset = new Point();
-
-        public Point Location { get { return location; } set { location = value; } }
-
-        public Point OffSet {
-            get { return offset; }
-            set { offset = value; }
-        }
-
-        public SelectionAdorner(DocumentViewerPanel adornedElement)
-            : base(adornedElement) {
-            PdfViewer = adornedElement;
-        }
-
-        protected override void OnRender(DrawingContext drawingContext) {
-            SolidColorBrush renderBrush = new SolidColorBrush(Colors.Green);
-            renderBrush.Opacity = 0.2;
-            Pen renderPen = new Pen(new SolidColorBrush(Colors.Navy), 1.5);
-            var selectionLocation = Location;
-
-            if (OffSet.X != 0 || OffSet.Y != 0)
-                drawingContext.DrawRectangle(renderBrush, renderPen, new Rect(selectionLocation, Point.Subtract(OffSet, new Point())));
-        }
-    }
-
-    public delegate void PdfSelectionChangedEventHandler(object sender, PdfSelectionChangedEventArgs args);
-    public class PdfSelectionChangedEventArgs : EventArgs {
-        public PdfDocumentPosition StartPosition { get; private set; }
-        public PdfDocumentPosition EndPosition { get; private set; }
-
-        public PdfSelectionChangedEventArgs(PdfDocumentPosition startPosition, PdfDocumentPosition endPosition) {
-            StartPosition = startPosition;
-            EndPosition = endPosition;
-        }
-    }
-
    
 }
