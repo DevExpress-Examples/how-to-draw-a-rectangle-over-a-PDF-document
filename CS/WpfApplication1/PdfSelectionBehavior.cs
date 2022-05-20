@@ -51,7 +51,6 @@ namespace WpfApplication1 {
 
             documentPanel = LayoutTreeHelper.GetVisualChildren(AssociatedObject).OfType<DocumentViewerPanel>().FirstOrDefault();
             if (documentPanel == null) return;
-
             controlAdornerLayer = AdornerLayer.GetAdornerLayer(documentPanel);
             selectionAdorner = new SelectionAdorner(documentPanel);
 
@@ -60,6 +59,8 @@ namespace WpfApplication1 {
             selectionAdorner.PreviewMouseMove += OnAdornerPreviewMouseMove;
             selectionAdorner.PreviewMouseLeftButtonUp += OnAdornerPreviewMouseLeftButtonUp;
 
+            DevExpress.Xpf.PdfViewer.DXScrollViewer scrollViewer = LayoutTreeHelper.GetVisualChildren(AssociatedObject).OfType<DevExpress.Xpf.PdfViewer.DXScrollViewer>().FirstOrDefault(x => x.Name == "PART_ScrollViewer");
+            scrollViewer.ScrollChanged += OnScrollChanged;
         }
         private void OnScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e) {
             var startPoint = selectionAdorner.Location;
