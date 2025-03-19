@@ -1,3 +1,4 @@
+Imports System
 Imports System.Linq
 Imports System.Windows
 Imports System.Windows.Documents
@@ -64,7 +65,7 @@ Namespace WpfApplication1
             AddHandler scrollViewer.ScrollChanged, AddressOf OnScrollChanged
         End Sub
 
-        Private Sub OnScrollChanged(ByVal sender As Object, ByVal e As System.Windows.Controls.ScrollChangedEventArgs)
+        Private Sub OnScrollChanged(ByVal sender As Object, ByVal e As Windows.Controls.ScrollChangedEventArgs)
             Dim startPoint = selectionAdorner.Location
             startPoint.Offset(-e.HorizontalChange, -e.VerticalChange)
             selectionAdorner.Location = startPoint
