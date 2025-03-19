@@ -4,14 +4,20 @@
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 [![](https://img.shields.io/badge/💬_Leave_Feedback-feecdd?style=flat-square)](#does-this-example-address-your-development-requirementsobjectives)
 <!-- default badges end -->
-# How to draw a rectangle over a PDF document
+# WPF PDF Viewer - Draw a Rectangle Over a PDF Cocument
 
-This example demonstrates how to add a selection rectangle to PdfViewerControl using an Adorner element and extract selected text.
-Selected text is retrieved with the help of the [PdfViewerControl.GetText(PdfDocumentArea)](https://docs.devexpress.com/WPF/DevExpress.Xpf.PdfViewer.PdfViewerControl.GetText%28DevExpress.Pdf.PdfDocumentArea%29) method.
+This example uses an Adorner element to add a selection rectangle to PdfViewerControl and extract selected text. To extract the selected text, this example calls the [PdfViewerControl.GetText(PdfDocumentArea)](https://docs.devexpress.com/WPF/DevExpress.Xpf.PdfViewer.PdfViewerControl.GetText(DevExpress.Pdf.PdfDocumentArea)) method.
 
-*Files to look at*: 
-* [MainWindow.xaml.cs](./CS/WpfApplication1/MainWindow.xaml.cs) (VB: [MainWindow.xaml.vb](./VB/WpfApplication1/MainWindow.xaml.vb))
-* [PdfSelectionBehavior.cs](./CS/WpfApplication1/PdfSelectionBehavior.cs) (VB: [PdfSelectionBehavior.vb](./VB/WpfApplication1/PdfSelectionBehavior.vb))
+<!-- default file list -->
+## Files to Look At
+* [MainWindow.xaml.cs](./CS/MainWindow.xaml.cs) (VB: [MainWindow.xaml.vb](./VB/MainWindow.xaml.vb))
+* [PdfSelectionBehavior.cs](./CS/PdfSelectionBehavior.cs) (VB: [PdfSelectionBehavior.vb](./VB/PdfSelectionBehavior.vb))
+<!-- default file list end -->
+
+## Documentation
+
+- [PdfViewerControl.GetText(PdfDocumentArea)](https://docs.devexpress.com/WPF/DevExpress.Xpf.PdfViewer.PdfViewerControl.GetText(DevExpress.Pdf.PdfDocumentArea))
+
 <!-- feedback -->
 ## Does this example address your development requirements/objectives?
 

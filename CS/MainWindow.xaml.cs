@@ -17,10 +17,7 @@ using DevExpress.Pdf;
 
 namespace WpfApplication1
 {
-    /// <summary>
-    /// Logica di interazione per MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : DevExpress.Xpf.Core.ThemedWindow
     {
         public MainWindow()
         {
