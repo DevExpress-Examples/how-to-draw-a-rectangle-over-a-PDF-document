@@ -6,7 +6,7 @@
 <!-- default badges end -->
 # WPF PDF Viewer - Draw a Rectangle Over a PDF Cocument
 
-This example uses an Adorner element to add a selection rectangle to PdfViewerControl and extract selected text. To extract the selected text, this example calls the [PdfViewerControl.GetText(PdfDocumentArea)](https://docs.devexpress.com/WPF/DevExpress.Xpf.PdfViewer.PdfViewerControl.GetText(DevExpress.Pdf.PdfDocumentArea)) method.
+This example uses an Adorner element to add a selection rectangle to PdfViewerControl and extract the selected text. To extract the selected text, this example calls the [PdfViewerControl.GetText(PdfDocumentArea)](https://docs.devexpress.com/WPF/DevExpress.Xpf.PdfViewer.PdfViewerControl.GetText(DevExpress.Pdf.PdfDocumentArea)) method.
 
 ![image](https://github.com/user-attachments/assets/b02e0268-824a-4c73-a622-39650951d2b8)
 
