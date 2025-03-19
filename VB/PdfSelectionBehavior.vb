@@ -1,12 +1,14 @@
 Imports System.Linq
-Imports System.Windows
+Imports System.Text
 Imports System.Windows.Documents
 Imports System.Windows.Input
+Imports System.Windows.Media
 Imports DevExpress.Mvvm.UI.Interactivity
 Imports DevExpress.Xpf.PdfViewer
 Imports DevExpress.Mvvm.UI
 Imports DevExpress.Xpf.DocumentViewer
 Imports DevExpress.Pdf
+Imports System.Windows.Threading
 
 Namespace WpfApplication1
 
@@ -39,29 +41,29 @@ Namespace WpfApplication1
             If AssociatedObject.IsLoaded Then
                 CreateAdorner()
             Else
-                AddHandler AssociatedObject.Loaded, AddressOf OnLoaded
+                Me.AssociatedObject.Loaded += AddressOf OnLoaded
             End If
         End Sub
 
         Private Sub OnLoaded(ByVal sender As Object, ByVal e As RoutedEventArgs)
-            RemoveHandler AssociatedObject.Loaded, AddressOf OnLoaded
+            Me.AssociatedObject.Loaded -= AddressOf OnLoaded
             CreateAdorner()
         End Sub
 
         Protected Overridable Sub CreateAdorner()
-            AddHandler AssociatedObject.PreviewMouseLeftButtonDown, AddressOf OnPreviewMouseLeftButtonDown
-            AddHandler AssociatedObject.PreviewMouseLeftButtonUp, AddressOf OnPreviewMouseLeftButtonUp
-            AddHandler AssociatedObject.PreviewMouseMove, AddressOf OnPreviewMouseMove
+            Me.AssociatedObject.PreviewMouseLeftButtonDown += AddressOf OnPreviewMouseLeftButtonDown
+            Me.AssociatedObject.PreviewMouseLeftButtonUp += AddressOf OnPreviewMouseLeftButtonUp
+            Me.AssociatedObject.PreviewMouseMove += AddressOf OnPreviewMouseMove
             documentPanel = LayoutTreeHelper.GetVisualChildren(AssociatedObject).OfType(Of DocumentViewerPanel)().FirstOrDefault()
             If documentPanel Is Nothing Then Return
             controlAdornerLayer = AdornerLayer.GetAdornerLayer(documentPanel)
             selectionAdorner = New SelectionAdorner(documentPanel)
             controlAdornerLayer.Add(selectionAdorner)
-            AddHandler selectionAdorner.PreviewMouseLeftButtonDown, AddressOf OnAdornerPreviewMouseLeftButtonDown
-            AddHandler selectionAdorner.PreviewMouseMove, AddressOf OnAdornerPreviewMouseMove
-            AddHandler selectionAdorner.PreviewMouseLeftButtonUp, AddressOf OnAdornerPreviewMouseLeftButtonUp
-            Dim scrollViewer As DevExpress.Xpf.PdfViewer.DXScrollViewer = LayoutTreeHelper.GetVisualChildren(AssociatedObject).OfType(Of DevExpress.Xpf.PdfViewer.DXScrollViewer)().FirstOrDefault(Function(x) Equals(x.Name, "PART_ScrollViewer"))
-            AddHandler scrollViewer.ScrollChanged, AddressOf OnScrollChanged
+            Me.selectionAdorner.PreviewMouseLeftButtonDown += AddressOf OnAdornerPreviewMouseLeftButtonDown
+            Me.selectionAdorner.PreviewMouseMove += AddressOf OnAdornerPreviewMouseMove
+            Me.selectionAdorner.PreviewMouseLeftButtonUp += AddressOf OnAdornerPreviewMouseLeftButtonUp
+            Dim scrollViewer As DevExpress.Xpf.PdfViewer.DXScrollViewer = LayoutTreeHelper.GetVisualChildren(AssociatedObject).OfType(Of DevExpress.Xpf.PdfViewer.DXScrollViewer)().FirstOrDefault(Function(x) x.Name Is "PART_ScrollViewer")
+            scrollViewer.ScrollChanged += AddressOf OnScrollChanged
         End Sub
 
         Private Sub OnScrollChanged(ByVal sender As Object, ByVal e As System.Windows.Controls.ScrollChangedEventArgs)
@@ -84,7 +86,7 @@ Namespace WpfApplication1
 
         Private Sub OnPreviewMouseMove(ByVal sender As Object, ByVal e As MouseEventArgs)
             If documentPanel Is Nothing Then Return
-            If documentPanel.IsMouseCaptured AndAlso e.LeftButton = MouseButtonState.Pressed Then
+            If documentPanel.IsMouseCaptured AndAlso e.LeftButton Is MouseButtonState.Pressed Then
                 Dim mouseOffset = e.GetPosition(selectionAdorner)
                 mouseOffset.Offset(-selectionAdorner.Location.X, -selectionAdorner.Location.Y)
                 selectionAdorner.OffSet = mouseOffset
@@ -114,7 +116,7 @@ Namespace WpfApplication1
         End Sub
 
         Private Sub OnAdornerPreviewMouseMove(ByVal sender As Object, ByVal e As MouseEventArgs)
-            If selectionAdorner.IsMouseCaptured AndAlso e.LeftButton = MouseButtonState.Pressed Then
+            If selectionAdorner.IsMouseCaptured AndAlso e.LeftButton Is MouseButtonState.Pressed Then
                 Dim mouseOffset = e.GetPosition(selectionAdorner)
                 mouseOffset.Offset(-mouseStartPoint.X, -mouseStartPoint.Y)
                 mouseStartPoint = e.GetPosition(selectionAdorner)
@@ -144,7 +146,7 @@ Namespace WpfApplication1
         End Sub
 
         Protected Overrides Sub OnDetaching()
-            RemoveHandler AssociatedObject.Loaded, AddressOf OnLoaded
+            Me.AssociatedObject.Loaded -= AddressOf OnLoaded
             DestroyAdorner()
             MyBase.OnDetaching()
         End Sub
