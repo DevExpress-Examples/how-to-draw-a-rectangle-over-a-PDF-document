@@ -1,5 +1,5 @@
 Imports DevExpress.Xpf.DocumentViewer
-Imports System.Windows
+Imports System.Linq
 Imports System.Windows.Documents
 Imports System.Windows.Media
 
@@ -41,7 +41,7 @@ Namespace WpfApplication1
             renderBrush.Opacity = 0.2
             Dim renderPen As Pen = New Pen(New SolidColorBrush(Colors.Navy), 1.5)
             Dim selectionLocation = Location
-            If OffSet.X <> 0 OrElse OffSet.Y <> 0 Then drawingContext.DrawRectangle(renderBrush, renderPen, New Rect(selectionLocation, Point.Subtract(OffSet, New Point())))
+            If OffSet.X IsNot 0 OrElse OffSet.Y IsNot 0 Then drawingContext.DrawRectangle(renderBrush, renderPen, New Rect(selectionLocation, Point.Subtract(OffSet, New Point())))
         End Sub
     End Class
 End Namespace
