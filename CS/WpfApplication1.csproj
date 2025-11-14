@@ -19,5 +19,6 @@
     <PackageReference Include="DevExpress.Wpf.Reporting" Version="24.2.*" />
     <PackageReference Include="DevExpress.Wpf.PdfViewer" Version="24.2.*" />
     <PackageReference Include="DevExpress.Wpf.Themes.Win11Light" Version="24.2.*" />
+	  <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 </Project>
