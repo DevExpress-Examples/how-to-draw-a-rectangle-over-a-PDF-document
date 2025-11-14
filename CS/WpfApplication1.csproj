@@ -19,7 +19,5 @@
     <PackageReference Include="DevExpress.Wpf.Reporting" Version="24.2.*" />
     <PackageReference Include="DevExpress.Wpf.PdfViewer" Version="24.2.*" />
     <PackageReference Include="DevExpress.Wpf.Themes.Win11Light" Version="24.2.*" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>
