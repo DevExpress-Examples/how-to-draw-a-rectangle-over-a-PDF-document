@@ -13,7 +13,7 @@ Selected text is retrieved with the help of the [PdfViewerControl.GetText(PdfDoc
 * [MainWindow.xaml.cs](./CS/WpfApplication1/MainWindow.xaml.cs) (VB: [MainWindow.xaml.vb](./VB/WpfApplication1/MainWindow.xaml.vb))
 * [PdfSelectionBehavior.cs](./CS/WpfApplication1/PdfSelectionBehavior.cs) (VB: [PdfSelectionBehavior.vb](./VB/WpfApplication1/PdfSelectionBehavior.vb))
 <!-- feedback -->
-## Does this example address your development requirements/objectives?
+## Does This Example Address Your Development Requirements/Objectives?
 
 [<img src="https://www.devexpress.com/support/examples/i/yes-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=wpf-pdf-viewer-draw-a-rectangle-over-a-document&~~~was_helpful=yes) [<img src="https://www.devexpress.com/support/examples/i/no-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=wpf-pdf-viewer-draw-a-rectangle-over-a-document&~~~was_helpful=no)
 
